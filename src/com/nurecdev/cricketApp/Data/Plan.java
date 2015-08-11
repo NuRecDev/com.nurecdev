@@ -1,4 +1,4 @@
-package com.nureech.cricketApp.Data;
+package com.nurecdev.cricketApp.Data;
 
 /**
  * Plan

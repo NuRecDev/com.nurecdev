@@ -1,4 +1,4 @@
-package com.nureech.cricketApp;
+package com.nurecdev.cricketApp;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

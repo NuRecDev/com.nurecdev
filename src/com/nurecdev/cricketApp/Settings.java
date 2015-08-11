@@ -1,4 +1,4 @@
-package com.nureech.cricketApp;
+package com.nurecdev.cricketApp;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class Settings {
 
-	private File settingsFile = new File("/home/miked49er/git/com.nureech/src/com/nureech/cricketApp/Txt/SettingsData.txt");
+	private File settingsFile = new File("/home/miked49er/git/com.nurecdev/src/com/nurecdev/cricketApp/Txt/SettingsData.txt");
 	private ArrayList< String > settings;
 	private double salesTax;
 	private double activationFee;

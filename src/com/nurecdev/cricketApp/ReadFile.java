@@ -1,5 +1,5 @@
 
-package com.nureech.cricketApp;
+package com.nurecdev.cricketApp;
 
 import java.io.File;
 import java.io.FileNotFoundException;

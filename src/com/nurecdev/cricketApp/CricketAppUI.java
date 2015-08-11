@@ -1,8 +1,8 @@
-package com.nureech.cricketApp;
+package com.nurecdev.cricketApp;
 
-import com.nureech.cricketApp.Data.Phone;
-import com.nureech.cricketApp.Data.PhoneData;
-import com.nureech.cricketApp.Data.Plan;
+import com.nurecdev.cricketApp.Data.Phone;
+import com.nurecdev.cricketApp.Data.PhoneData;
+import com.nurecdev.cricketApp.Data.Plan;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -70,12 +70,11 @@ public class CricketAppUI extends Application {
 	private Label customPromoLbl;
 	private CheckBox customPromoBox;
 	private ComboBox< String > phoneNames;
-	private ArrayList< Label > phoneNormalPrices;
-	private Label phoneNormalLbl;
+	private Label phoneNormalPrices;
 	private Label promoNewCustomerLbl;
 	private Label promoUpgradeLbl;
-	private ArrayList< TextField > promoNewCustomerPrices;
-	private ArrayList< TextField > promoUpgradePrices;
+	private TextField promoNewCustomerPrices;
+	private TextField promoUpgradePrices;
 	private Button promoEnd;
 	private Button saveBtn;
 
@@ -115,6 +114,8 @@ public class CricketAppUI extends Application {
 		actFeeInput.setStyle("-fx-background-color: white");
 		upgrFeeInput.setText("" + settings.getUpgradeFee());
 		upgrFeeInput.setStyle("-fx-background-color: white");
+		promoNewCustomerPrices.setStyle("-fx-background-color: white");
+		promoUpgradePrices.setStyle("-fx-background-color: white");
 		pane.setCenter(setAct);
 		setAct.add(errorLbl, 1, 4);
 		inputs.setVisible(false);
@@ -372,7 +373,7 @@ public class CricketAppUI extends Application {
 			public void handle( ActionEvent event ) {
 
 				if ( phoneCombo.getValue().equals(phoneList.get(0)) ) { // GS5
-					
+
 				}
 				else if ( phoneCombo.getValue().equals(phoneList.get(1)) ) { // GS4
 
@@ -530,7 +531,7 @@ public class CricketAppUI extends Application {
 
 		setAct = new GridPane();
 		setAct.setPadding(new Insets(50, 50, 50, 50));
-		setAct.setVgap(30);
+		setAct.setVgap(10);
 		setAct.setHgap(30);
 
 		salesTaxSetPrompt = new Label("Sales Tax: ");
@@ -561,17 +562,30 @@ public class CricketAppUI extends Application {
 		upgrFeeInput.setMinHeight(40);
 		upgrFeeInput.setMinWidth(80);
 
-		customPromoLbl = new Label("Custom Promo?");
+		customPromoLbl = new Label("Custom\nPromo?");
 		customPromoBox = new CheckBox();
 
-		phoneCombo = new ComboBox< String >(phoneList);
-		phoneCombo.setMinHeight(40);
-		phoneCombo.setMinWidth(150);
-		phoneCombo.setValue("Phone");
+		phoneNames = new ComboBox< String >(phoneList);
+		phoneNames.setMinHeight(40);
+		phoneNames.setMinWidth(100);
+		phoneNames.setValue("Phone");
 
-		phoneNormalLbl = new Label("Normal Price");
-		promoNewCustomerLbl = new Label("New Customer Promo");
-		promoUpgradeLbl = new Label("Upgrade Promo");
+		promoNewCustomerLbl = new Label("New Customer\nPromo");
+		promoUpgradeLbl = new Label("Upgrade\nPromo");
+
+		phoneNormalPrices = new Label("");
+		promoNewCustomerPrices = new TextField();
+		promoNewCustomerPrices.setMinWidth(80);
+		promoNewCustomerPrices.setMinWidth(40);
+
+		promoUpgradePrices = new TextField();
+		promoUpgradePrices.setMinWidth(80);
+		promoUpgradePrices.setMinHeight(40);
+
+		promoEnd = new Button();
+		promoEnd.setMinHeight(40);
+		promoEnd.setMinWidth(100);
+		promoEnd.setText("End Promo");
 
 		saveBtn = new Button();
 		saveBtn.setMinWidth(100);
@@ -584,7 +598,16 @@ public class CricketAppUI extends Application {
 		setAct.add(actFeeInput, 1, 1);
 		setAct.add(upgrFeePrompt, 0, 2);
 		setAct.add(upgrFeeInput, 1, 2);
-		setAct.add(saveBtn, 1, 3);
+		setAct.add(customPromoLbl, 0, 3);
+		setAct.add(customPromoBox, 1, 3);
+		setAct.add(phoneNames, 0, 4);
+		setAct.add(phoneNormalPrices, 1, 4);
+		setAct.add(promoNewCustomerLbl, 0, 5);
+		setAct.add(promoNewCustomerPrices, 1, 5);
+		setAct.add(promoUpgradeLbl, 0, 6);
+		setAct.add(promoUpgradePrices, 1, 6);
+		setAct.add(promoEnd, 0, 7);
+		setAct.add(saveBtn, 1, 7);
 
 		homeSetup();
 		buttonActions();

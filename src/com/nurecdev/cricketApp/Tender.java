@@ -1,7 +1,7 @@
-package com.nureech.cricketApp;
+package com.nurecdev.cricketApp;
 
-import com.nureech.cricketApp.Data.Phone;
-import com.nureech.cricketApp.Data.Plan;
+import com.nurecdev.cricketApp.Data.Phone;
+import com.nurecdev.cricketApp.Data.Plan;
 
 import java.text.DecimalFormat;
 
