@@ -1,0 +1,3 @@
+Sales Tax:7.0
+Activation Fee:25.0
+Upgrade Fee:25.0
