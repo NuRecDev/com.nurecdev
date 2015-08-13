@@ -134,9 +134,14 @@ public class Phone {
 	/**
 	 * Method: setHasPromo
 	 * @param hasPromo
+	 * Description: If set to false then promoPrice is set to phonePrice
 	 */
 	public void setHasPromo( boolean hasPromo ) {
 		this.hasPromo = hasPromo;
+
+		if ( !hasPromo ) {
+			this.promoPrice = this.phonePrice;
+		}
 	}
 
 	/**
@@ -150,9 +155,21 @@ public class Phone {
 	/**
 	 * Method: setHasCustomPromo
 	 * @param hasCustomPromo
+	 * Description: If set to false then customPromoNewCustomer and customPromoUpgrade set to the promoPrice and phonePrice respectively
 	 */
 	public void setHasCustomPromo( boolean hasCustomPromo ) {
 		this.hasCustomPromo = hasCustomPromo;
+
+		if ( !this.hasCustomPromo ) {
+
+			if ( this.hasPromo ) {
+				this.customPromoNewCustomer = this.promoPrice;
+			}
+			else {
+				this.customPromoNewCustomer = this.phonePrice;
+			}
+			this.customPromoUpgrade = this.phonePrice;
+		}
 	}
 
 	/**

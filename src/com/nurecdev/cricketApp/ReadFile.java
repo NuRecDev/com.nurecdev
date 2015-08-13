@@ -1,4 +1,3 @@
-
 package com.nurecdev.cricketApp;
 
 import java.io.File;

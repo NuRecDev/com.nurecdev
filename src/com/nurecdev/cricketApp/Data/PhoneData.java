@@ -30,13 +30,13 @@ public class PhoneData {
 	public Plan smart = new Plan("Smart", 50, "Unlimited Talk\nUnlimited Text\nUnlimited Data\n3 GB of High Speed Data\n");
 	public Plan pro = new Plan("Pro", 60, "Unlimited Talk\nUnlimited Text\nUnlimited Data\n10 GB of High Speed Data\n");
 
-	private ArrayList<Phone> phones;
-	private ArrayList<Plan> plans;
+	private ArrayList< Phone > phones;
+	private ArrayList< Plan > plans;
 
 	public PhoneData() {
 
-		phones = new ArrayList<Phone>();
-		plans = new ArrayList<Plan>();
+		phones = new ArrayList< Phone >();
+		plans = new ArrayList< Plan >();
 
 		phones();
 		plans();
@@ -63,9 +63,9 @@ public class PhoneData {
 
 	public ArrayList< String > getPhonesNames() {
 
-		ArrayList<String> phoneNames = new ArrayList<String>();
+		ArrayList< String > phoneNames = new ArrayList< String >();
 
-		for (int i=0; i<this.phones.size(); i++) {
+		for ( int i = 0; i < this.phones.size(); i++ ) {
 
 			phoneNames.add(this.phones.get(i).getPhoneName());
 		}
@@ -75,9 +75,9 @@ public class PhoneData {
 
 	public ArrayList< String > getPlansNames() {
 
-		ArrayList<String> planNames = new ArrayList<String>();
+		ArrayList< String > planNames = new ArrayList< String >();
 
-		for (int i=0; i<this.plans.size(); i++) {
+		for ( int i = 0; i < this.plans.size(); i++ ) {
 
 			planNames.add(this.plans.get(i).getPlanName());
 		}

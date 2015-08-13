@@ -16,7 +16,8 @@ import java.util.ArrayList;
  */
 public class Settings {
 
-	private File settingsFile = new File("/home/miked49er/git/com.nurecdev/src/com/nurecdev/cricketApp/Txt/SettingsData.txt");
+	private File settingsFile = new File("C:\\Users\\miked49er\\git\\com.nurecdev\\src\\com\\nurecdev\\cricketApp\\Txt\\SettingsData.txt");
+//	private File settingsFile = new File("/home/miked49er/git/com.nurecdev/src/com/nurecdev/cricketApp/Txt/SettingsData.txt");
 	private ArrayList< String > settings;
 	private double salesTax;
 	private double activationFee;
@@ -51,10 +52,12 @@ public class Settings {
 			if ( settings.get(i).substring(0, k).equals("Sales Tax") ) {
 
 				this.salesTax = Double.parseDouble(settings.get(i).substring(k + 1));
-			} else if ( settings.get(i).substring(0, k).equals("Activation Fee") ) {
+			}
+			else if ( settings.get(i).substring(0, k).equals("Activation Fee") ) {
 
 				this.activationFee = Double.parseDouble(settings.get(i).substring(k + 1));
-			} else if ( settings.get(i).substring(0, k).equals("Upgrade Fee") ) {
+			}
+			else if ( settings.get(i).substring(0, k).equals("Upgrade Fee") ) {
 
 				this.upgradeFee = Double.parseDouble(settings.get(i).substring(k + 1));
 			}

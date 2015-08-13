@@ -33,8 +33,8 @@ public class Tender {
 	public Tender() {
 		settings = new Settings();
 		this.newCustomer = true;
-		this.phone = new Phone();
-		this.plan = new Plan();
+		this.phone = null;
+		this.plan = null;
 		this.adjustment = 0;
 		this.fees = 0;
 		this.accessories = 0;
@@ -50,6 +50,14 @@ public class Tender {
 	}
 
 	/**
+	 * Method: isNewCustomer
+	 * @return newCustomer
+	 */
+	public boolean isNewCustomer() {
+		return newCustomer;
+	}
+
+	/**
 	 * Method: setPhone
 	 * @param phone
 	 * @return void
@@ -59,12 +67,24 @@ public class Tender {
 	}
 
 	/**
+	 * Method: getPhone
+	 * @return phone
+	 */
+	public Phone getPhone() {
+		return phone;
+	}
+
+	/**
 	 * Method: setPlan
 	 * @param plan
 	 * @return void
 	 */
 	public void setPlan( Plan plan ) {
 		this.plan = plan;
+	}
+
+	public Plan getPlan() {
+		return plan;
 	}
 
 	public void setAdjustment( double adjustment ) {
@@ -91,7 +111,7 @@ public class Tender {
 
 	/**
 	 * round
-	 * @param a double
+	 * @param double
 	 * @return String
 	 * This will round a double to two decimal places
 	 */
@@ -114,15 +134,31 @@ public class Tender {
 	 */
 	public String sale() {
 
-		double sale;
+		double sale = ( ( phone.getPhonePrice() + fees + accessories ) * ( settings.getSaleTax() / 100 ) )
+				+ phone.getPhonePrice() + fees + accessories;
 
-		if ( newCustomer && phone.hasPromo() ) {
+		if ( phone.hasCustomPromo() ) {
+			if ( newCustomer ) {
 
-			sale = ( ( phone.getPromoPrice() + fees + accessories ) * ( settings.getSaleTax() / 100 ) ) + phone.getPromoPrice() + plan.getPlanPrice() - adjustment + fees + accessories;
+				sale = ( ( phone.getCustomPromoNewCustomer() + fees + accessories ) * ( settings.getSaleTax() / 100 ) )
+						+ phone.getCustomPromoNewCustomer() + plan.getPlanPrice() - adjustment + fees + accessories;
+			}
+			else {
+
+				sale = ( ( phone.getCustomPromoUpgrade() + fees + accessories ) * ( settings.getSaleTax() / 100 ) )
+						+ phone.getCustomPromoUpgrade() + fees + accessories;
+			}
 		}
-		else {
+		else if ( phone.hasPromo() ) {
+			if ( newCustomer ) {
 
-			sale = ( ( phone.getPhonePrice() + fees + accessories ) * ( settings.getSaleTax() / 100 ) ) + phone.getPhonePrice() + plan.getPlanPrice() - adjustment + fees + accessories;
+				sale = ( ( phone.getPromoPrice() + fees + accessories ) * ( settings.getSaleTax() / 100 ) )
+						+ phone.getPromoPrice() + plan.getPlanPrice() - adjustment + fees + accessories;
+			}
+		}
+		else if ( newCustomer ) {
+
+			sale += plan.getPlanPrice() - adjustment;
 		}
 		return round(sale);
 	}

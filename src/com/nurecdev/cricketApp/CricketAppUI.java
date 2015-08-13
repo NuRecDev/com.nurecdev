@@ -2,7 +2,6 @@ package com.nurecdev.cricketApp;
 
 import com.nurecdev.cricketApp.Data.Phone;
 import com.nurecdev.cricketApp.Data.PhoneData;
-import com.nurecdev.cricketApp.Data.Plan;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,14 +10,9 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
 
 /**
  * Created by miked49er on 7/24/15.
@@ -75,6 +69,7 @@ public class CricketAppUI extends Application {
 	private Label promoUpgradeLbl;
 	private TextField promoNewCustomerPrices;
 	private TextField promoUpgradePrices;
+	private Phone promoPhone;
 	private Button promoEnd;
 	private Button saveBtn;
 
@@ -118,8 +113,28 @@ public class CricketAppUI extends Application {
 		promoUpgradePrices.setStyle("-fx-background-color: white");
 		pane.setCenter(setAct);
 		setAct.add(errorLbl, 1, 4);
+		promoEnd.setVisible(false);
 		inputs.setVisible(false);
 		setAct.setVisible(true);
+
+		if ( !customPromoBox.isSelected() ) {
+			phoneNames.setVisible(false);
+			phoneNormalPrices.setVisible(false);
+			promoNewCustomerLbl.setVisible(false);
+			promoNewCustomerPrices.setVisible(false);
+			promoUpgradeLbl.setVisible(false);
+			promoUpgradePrices.setVisible(false);
+			promoEnd.setVisible(false);
+		}
+		else if ( customPromoBox.isSelected() ) {
+			phoneNames.setVisible(true);
+			phoneNormalPrices.setVisible(true);
+			promoNewCustomerLbl.setVisible(true);
+			promoNewCustomerPrices.setVisible(true);
+			promoUpgradeLbl.setVisible(true);
+			promoUpgradePrices.setVisible(true);
+			promoEnd.setVisible(true);
+		}
 	}
 
 	private void buttonActions() {
@@ -143,16 +158,36 @@ public class CricketAppUI extends Application {
 			@Override
 			public void handle( ActionEvent event ) {
 
+				errorLbl.setText("");
 				feesField.setStyle("-fx-background-color: white");
 				accessoriesInput.setStyle("-fx-background-color: white");
 
 				try {
+
+					if ( activationType.getValue().equals("New/Upgrade") ) {
+
+						throw new NullPointerException("Please select New Customer\nor Upgrade.");
+					}
+					else if ( tender.getPhone() == null ) {
+
+						throw new NullPointerException("Please select a phone.");
+					}
+					else if ( tender.isNewCustomer() && ( tender.getPlan() == null ) ) {
+
+						throw new NullPointerException("Please select a plan.");
+					}
+					else if (feesCombo.getValue().equals("Fees")) {
+
+						throw new NullPointerException("Please select a fee\nor none if not applicable");
+					}
 
 					if ( Double.parseDouble(feesField.getText()) != fee ) {
 
 						tender.setFees(Double.parseDouble(feesField.getText()));
 					}
 					tender.setAccessories(Double.parseDouble(accessoriesInput.getText()));
+
+					totalField.setText("$" + tender.sale());
 				}
 				catch ( NumberFormatException nfe ) {
 
@@ -168,8 +203,11 @@ public class CricketAppUI extends Application {
 						inputError(accessoriesInput);
 					}
 				}
+				catch ( NullPointerException npe ) {
 
-				totalField.setText("$" + tender.sale());
+					errorLbl.setText(npe.getMessage());
+				}
+
 			}
 		});
 
@@ -188,6 +226,25 @@ public class CricketAppUI extends Application {
 			@Override
 			public void handle( ActionEvent event ) {
 
+				if ( customPromoBox.isSelected() ) {
+					phoneNames.setVisible(true);
+					phoneNormalPrices.setVisible(true);
+					promoNewCustomerLbl.setVisible(true);
+					promoNewCustomerPrices.setVisible(true);
+					promoUpgradeLbl.setVisible(true);
+					promoUpgradePrices.setVisible(true);
+					promoEnd.setVisible(true);
+				}
+				else {
+					phoneNames.setVisible(false);
+					phoneNormalPrices.setVisible(false);
+					promoNewCustomerLbl.setVisible(false);
+					promoNewCustomerPrices.setVisible(false);
+					promoUpgradeLbl.setVisible(false);
+					promoUpgradePrices.setVisible(false);
+					promoEnd.setVisible(false);
+					resetCustomPromos();
+				}
 			}
 		});
 
@@ -200,6 +257,17 @@ public class CricketAppUI extends Application {
 					settings.setSaleTax(Double.parseDouble(salesTaxSetInput.getText()));
 					settings.setActivationFee(Double.parseDouble(actFeeInput.getText()));
 					settings.setUpgradeFee(Double.parseDouble(upgrFeeInput.getText()));
+
+					if ( customPromoBox.isSelected() ) {
+						promoPhone.setHasCustomPromo(true);
+						promoPhone.setCustomPromoNewCustomer(Double.parseDouble(promoNewCustomerPrices.getText()));
+						promoPhone.setCustomPromoUpgrade(Double.parseDouble(promoUpgradePrices.getText()));
+					}
+					else {
+
+						resetCustomPromos();
+					}
+
 					errorLbl.setText("");
 				}
 				catch ( NumberFormatException nfe ) {
@@ -220,6 +288,14 @@ public class CricketAppUI extends Application {
 						inputError(upgrFeeInput);
 					}
 				}
+			}
+		});
+
+		promoEnd.setOnAction(new EventHandler< ActionEvent >() {
+			@Override
+			public void handle( ActionEvent event ) {
+
+				resetCustomPromos();
 			}
 		});
 	}
@@ -372,29 +448,61 @@ public class CricketAppUI extends Application {
 			@Override
 			public void handle( ActionEvent event ) {
 
-				if ( phoneCombo.getValue().equals(phoneList.get(0)) ) { // GS5
+				if ( phoneNames.getValue().equals(phoneList.get(0)) ) { // GS5
 
+					promoPhone = data.gs5;
+					phoneNormalPrices.setText("" + data.gs5.getPhonePrice());
+					promoNewCustomerPrices.setText("" + data.gs5.getPhonePrice());
+					promoUpgradePrices.setText("" + data.gs5.getPhonePrice());
 				}
-				else if ( phoneCombo.getValue().equals(phoneList.get(1)) ) { // GS4
+				else if ( phoneNames.getValue().equals(phoneList.get(1)) ) { // GS4
 
+					promoPhone = data.gs4;
+					phoneNormalPrices.setText("" + data.gs4.getPhonePrice());
+					promoNewCustomerPrices.setText("" + data.gs4.getPhonePrice());
+					promoUpgradePrices.setText("" + data.gs4.getPhonePrice());
 				}
-				else if ( phoneCombo.getValue().equals(phoneList.get(2)) ) { // iPhone 6
+				else if ( phoneNames.getValue().equals(phoneList.get(2)) ) { // iPhone 6
 
+					promoPhone = data.iPhone6;
+					phoneNormalPrices.setText("" + data.iPhone6.getPhonePrice());
+					promoNewCustomerPrices.setText("" + data.iPhone6.getPhonePrice());
+					promoUpgradePrices.setText("" + data.iPhone6.getPhonePrice());
 				}
-				else if ( phoneCombo.getValue().equals(phoneList.get(3)) ) { // iPhone 5s
+				else if ( phoneNames.getValue().equals(phoneList.get(3)) ) { // iPhone 5s
 
+					promoPhone = data.iPhone5s;
+					phoneNormalPrices.setText("" + data.iPhone5s.getPhonePrice());
+					promoNewCustomerPrices.setText("" + data.iPhone5s.getPhonePrice());
+					promoUpgradePrices.setText("" + data.iPhone5s.getPhonePrice());
 				}
-				else if ( phoneCombo.getValue().equals(phoneList.get(4)) ) { // Moto G
+				else if ( phoneNames.getValue().equals(phoneList.get(4)) ) { // Moto G
 
+					promoPhone = data.motoG;
+					phoneNormalPrices.setText("" + data.motoG.getPhonePrice());
+					promoNewCustomerPrices.setText("" + data.motoG.getPhonePrice());
+					promoUpgradePrices.setText("" + data.motoG.getPhonePrice());
 				}
-				else if ( phoneCombo.getValue().equals(phoneList.get(5)) ) { // HTC 510
+				else if ( phoneNames.getValue().equals(phoneList.get(5)) ) { // HTC 510
 
+					promoPhone = data.htc510;
+					phoneNormalPrices.setText("" + data.htc510.getPhonePrice());
+					promoNewCustomerPrices.setText("" + data.htc510.getPhonePrice());
+					promoUpgradePrices.setText("" + data.htc510.getPhonePrice());
 				}
-				else if ( phoneCombo.getValue().equals(phoneList.get(6)) ) { // Nokia 635
+				else if ( phoneNames.getValue().equals(phoneList.get(6)) ) { // Nokia 635
 
+					promoPhone = data.nokia635;
+					phoneNormalPrices.setText("" + data.nokia635.getPhonePrice());
+					promoNewCustomerPrices.setText("" + data.nokia635.getPhonePrice());
+					promoUpgradePrices.setText("" + data.nokia635.getPhonePrice());
 				}
-				else if ( phoneCombo.getValue().equals(phoneList.get(7)) ) { // Nokia 1320
+				else if ( phoneNames.getValue().equals(phoneList.get(7)) ) { // Nokia 1320
 
+					promoPhone = data.nokia1320;
+					phoneNormalPrices.setText("" + data.nokia1320.getPhonePrice());
+					promoNewCustomerPrices.setText("" + data.nokia1320.getPhonePrice());
+					promoUpgradePrices.setText("" + data.nokia1320.getPhonePrice());
 				}
 			}
 		});
@@ -421,6 +529,17 @@ public class CricketAppUI extends Application {
 		totalField.setText("");
 	}
 
+	private void resetCustomPromos() {
+		data.gs5.setHasCustomPromo(false);
+		data.gs4.setHasCustomPromo(false);
+		data.iPhone6.setHasCustomPromo(false);
+		data.iPhone5s.setHasCustomPromo(false);
+		data.motoG.setHasCustomPromo(false);
+		data.htc510.setHasCustomPromo(false);
+		data.nokia635.setHasCustomPromo(false);
+		data.nokia1320.setHasCustomPromo(false);
+	}
+
 	public void start( Stage arg0 ) throws Exception {
 
 //		findFiles();
@@ -444,7 +563,7 @@ public class CricketAppUI extends Application {
 
 		actionBarPane = new BorderPane();
 		actionBarPane.setMinHeight(50);
-		actionBarPane.setPadding(new Insets(10));
+		actionBarPane.setPadding(new Insets(10, 20, 10, 0));
 		actionBarPane.setStyle("-fx-background-color: #000");
 		actionBarPane.setRight(optionsBtn);
 
@@ -453,8 +572,8 @@ public class CricketAppUI extends Application {
 		// Home UI
 
 		inputs = new GridPane();
-		inputs.setPadding(new Insets(30, 30, 30, 30));
-		inputs.setVgap(30);
+		inputs.setPadding(new Insets(30));
+		inputs.setVgap(20);
 		inputs.setHgap(30);
 
 		activationList = FXCollections.observableArrayList("New Customer", "Upgrade", "Add a Line");
@@ -530,7 +649,7 @@ public class CricketAppUI extends Application {
 		// Settings Page UI
 
 		setAct = new GridPane();
-		setAct.setPadding(new Insets(50, 50, 50, 50));
+		setAct.setPadding(new Insets(30));
 		setAct.setVgap(10);
 		setAct.setHgap(30);
 
@@ -564,6 +683,7 @@ public class CricketAppUI extends Application {
 
 		customPromoLbl = new Label("Custom\nPromo?");
 		customPromoBox = new CheckBox();
+		promoPhone = new Phone();
 
 		phoneNames = new ComboBox< String >(phoneList);
 		phoneNames.setMinHeight(40);
